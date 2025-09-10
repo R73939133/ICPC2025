@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICPC Countdown - Get Ready to Code!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Courier New', monospace;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+        }
+
+        .header {
+            margin-bottom: 3rem;
+        }
+
+        .title {
+            font-size: 4rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5)); }
+            to { filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8)); }
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .competitions {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .competition-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            min-width: 400px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .competition-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .competition-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #FFD700;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .competition-date {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.8;
+        }
+
+        .countdown {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .time-unit {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .time-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #00FF88;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+            margin-bottom: 0.5rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .time-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+
+        .status {
+            margin-top: 1rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            padding: 0.5rem;
+            border-radius: 25px;
+            background: rgba(0, 255, 136, 0.2);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .completed {
+            background: rgba(255, 215, 0, 0.2) !important;
+            border-color: rgba(255, 215, 0, 0.3) !important;
+            color: #FFD700 !important;
+        }
+
+        .motivation {
+            margin-top: 3rem;
+            font-size: 1.3rem;
+            opacity: 0.9;
+            font-style: italic;
+            animation: fadeInOut 4s ease-in-out infinite;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        .code-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: -1;
+            opacity: 0.1;
+        }
+
+        .code-line {
+            position: absolute;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            white-space: nowrap;
+            animation: slideCode 15s linear infinite;
+        }
+
+        @keyframes slideCode {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(100vw); }
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2.5rem;
+            }
+            
+            .competitions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .competition-card {
+                min-width: 90%;
+            }
+            
+            .countdown {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
+            }
+            
+            .time-number {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="code-bg" id="codeBg"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1 class="title">ICPC 2025</h1>
+            <p class="subtitle">International Collegiate Programming Contest</p>
+        </div>
+
+        <div class="competitions">
+            <div class="competition-card">
+                <h2 class="competition-title">Preliminary Round</h2>
+                <p class="competition-date">October 25, 2025</p>
+                <div class="countdown" id="preliminaryCountdown">
+                    <div class="time-unit">
+                        <div class="time-number" id="prelim-days">00</div>
+                        <div class="time-label">Days</div>
+                    </div>
+                    <div class="time-unit">
+                        <div class="time-number" id="prelim-hours">00</div>
+                        <div class="time-label">Hours</div>
+                    </div>
+                    <div class="time-unit">
+                        <div class="time-number" id="prelim-minutes">00</div>
+                        <div class="time-label">Minutes</div>
+                    </div>
+                    <div class="time-unit">
+                        <div class="time-number" id="prelim-seconds">00</div>
+                        <div class="time-label">Seconds</div>
+                    </div>
+                </div>
+                <div class="status" id="prelimStatus">Get Ready to Compete!</div>
+            </div>
+
+            <div class="competition-card">
+                <h2 class="competition-title">Regional Final</h2>
+                <p class="competition-date">December 19, 2025</p>
+                <div class="countdown" id="regionalCountdown">
+                    <div class="time-unit">
+                        <div class="time-number" id="regional-days">00</div>
+                        <div class="time-label">Days</div>
+                    </div>
+                    <div class="time-unit">
+                        <div class="time-number" id="regional-hours">00</div>
+                        <div class="time-label">Hours</div>
+                    </div>
+                    <div class="time-unit">
+                        <div class="time-number" id="regional-minutes">00</div>
+                        <div class="time-label">Minutes</div>
+                    </div>
+                    <div class="time-unit">
+                        <div class="time-number" id="regional-seconds">00</div>
+                        <div class="time-label">Seconds</div>
+                    </div>
+                </div>
+                <div class="status" id="regionalStatus">The Ultimate Challenge!</div>
+            </div>
+        </div>
+
+        <div class="motivation" id="motivation">
+            "Great programmers are made, not born. Keep coding, keep learning!"
+        </div>
+    </div>
+
+    <script>
+        // Competition dates
+        const preliminaryDate = new Date('2025-10-25T00:00:00');
+        const regionalDate = new Date('2025-12-19T00:00:00');
+
+        // Motivational quotes
+        const quotes = [
+            "Great programmers are made, not born. Keep coding, keep learning!",
+            "Every expert was once a beginner. Keep pushing forward!",
+            "Code is poetry written in logic. Make yours beautiful!",
+            "The only way to learn programming is by writing programs!",
+            "Debugging is twice as hard as writing code. Write clean code!",
+            "First, solve the problem. Then, write the code.",
+            "Programs must be written for people to read!"
+        ];
+
+        let quoteIndex = 0;
+
+        function updateCountdown(targetDate, prefix) {
+            const now = new Date().getTime();
+            const timeLeft = targetDate.getTime() - now;
+
+            if (timeLeft > 0) {
+                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+                document.getElementById(`${prefix}-days`).textContent = String(days).padStart(2, '0');
+                document.getElementById(`${prefix}-hours`).textContent = String(hours).padStart(2, '0');
+                document.getElementById(`${prefix}-minutes`).textContent = String(minutes).padStart(2, '0');
+                document.getElementById(`${prefix}-seconds`).textContent = String(seconds).padStart(2, '0');
+
+                return false; // Not completed
+            } else {
+                document.getElementById(`${prefix}-days`).textContent = '00';
+                document.getElementById(`${prefix}-hours`).textContent = '00';
+                document.getElementById(`${prefix}-minutes`).textContent = '00';
+                document.getElementById(`${prefix}-seconds`).textContent = '00';
+                
+                return true; // Completed
+            }
+        }
+
+        function updateStatus() {
+            const prelimCompleted = updateCountdown(preliminaryDate, 'prelim');
+            const regionalCompleted = updateCountdown(regionalDate, 'regional');
+
+            const prelimStatus = document.getElementById('prelimStatus');
+            const regionalStatus = document.getElementById('regionalStatus');
+
+            if (prelimCompleted) {
+                prelimStatus.textContent = 'Preliminary Complete! ✓';
+                prelimStatus.classList.add('completed');
+            } else {
+                prelimStatus.textContent = 'Get Ready to Compete!';
+            }
+
+            if (regionalCompleted) {
+                regionalStatus.textContent = 'Regional Complete! ✓';
+                regionalStatus.classList.add('completed');
+            } else {
+                regionalStatus.textContent = 'The Ultimate Challenge!';
+            }
+        }
+
+        function rotateMotivation() {
+            const motivationElement = document.getElementById('motivation');
+            quoteIndex = (quoteIndex + 1) % quotes.length;
+            motivationElement.style.opacity = '0';
+            
+            setTimeout(() => {
+                motivationElement.textContent = quotes[quoteIndex];
+                motivationElement.style.opacity = '1';
+            }, 500);
+        }
+
+        function createCodeBackground() {
+            const codeBg = document.getElementById('codeBg');
+            const codeSnippets = [
+                'for(int i = 0; i < n; i++) {',
+                '    if(arr[i] > max) max = arr[i];',
+                '}',
+                'vector<int> dp(n, 0);',
+                'sort(v.begin(), v.end());',
+                'int left = 0, right = n-1;',
+                'while(left <= right) {',
+                '    int mid = (left + right) / 2;',
+                'cout << "Hello ICPC!" << endl;',
+                '#include <algorithm>',
+                'map<string, int> mp;',
+                'queue<pair<int, int>> q;'
+            ];
+
+            for (let i = 0; i < 8; i++) {
+                const codeLine = document.createElement('div');
+                codeLine.className = 'code-line';
+                codeLine.textContent = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+                codeLine.style.top = Math.random() * 100 + 'vh';
+                codeLine.style.animationDelay = Math.random() * 15 + 's';
+                codeLine.style.animationDuration = (10 + Math.random() * 10) + 's';
+                codeBg.appendChild(codeLine);
+            }
+        }
+
+        // Initialize
+        createCodeBackground();
+        updateStatus();
+        
+        // Update every second
+        setInterval(updateStatus, 1000);
+        
+        // Rotate motivation every 5 seconds
+        setInterval(rotateMotivation, 5000);
+    </script>
+</body>
+</html>
